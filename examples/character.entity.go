@@ -1,7 +1,7 @@
 package examples
 
-type Character struct{
+type Character struct {
 	charName string
-	active bool
-	owner User
+	active   bool
+	owner    User
 }
