@@ -1,4 +1,4 @@
-### Plug-n-Plau
+### Plug-n-Play
 
 plug-n-play is a command-line tool that allows you to generate a Client to consume your API and provide a set of utilities to implement your business logic at client forms.
 
