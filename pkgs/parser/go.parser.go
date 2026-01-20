@@ -27,19 +27,21 @@ func (p *GoParser) FilterModelFiles() {
 	p.Tree.Files = filteredFiles
 }
 
-func (p *GoParser) GetContent() {
+func (p *GoParser) GetEntities() entities.EntitiesTree {
+	tree := entities.CreateEntitiesTree()
 	for _, file := range p.Tree.Files {
 		data, err := os.ReadFile(file)
 		if err != nil {
 			fmt.Printf("Error reading file %s: %v\n", file, err)
 			continue
 		}
-		fmt.Printf("File %s\nContent:\n%s\n", file, string(data))
+		//fmt.Printf("File %s\nContent:\n%s\n", file, string(data))
+		tree = parse2Entity(string(data), tree)
 	}
+	return tree
 }
 
-func parse2Entity(content string) entities.EntitiesTree {
-	tree := entities.CreateEntitiesTree()
+func parse2Entity(content string, tree entities.EntitiesTree) entities.EntitiesTree {
 	//pattern to get entity name and content into brackets block
 	pattern := `(?:type)\s+(?P<Entity>\w+)\s+(?:struct)(?:\s*)(?:\n*)(?:{)(?:\n*)(?P<Content>[^}]*)`
 	re := regexp.MustCompile(pattern)
@@ -56,7 +58,7 @@ func parse2Entity(content string) entities.EntitiesTree {
 func parseFields(content string) []entities.Field {
 	fields := []entities.Field{}
 	//pattern to get field name and type from content
-	pattern := `(?P<Key>\w+)\s+(?P<Value>\w+);`
+	pattern := `(?P<Key>\w+)\s+(?P<Value>\w+)`
 	re := regexp.MustCompile(pattern)
 	matches := re.FindAllStringSubmatch(content, -1)
 	for _, match := range matches {
